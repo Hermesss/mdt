@@ -12,7 +12,7 @@ pipeline{
             tools {nodejs "NodeJS14"}
             when{
                 branch 'master'
-            
+               }
             steps {
                 echo 'run this stage - ony if the branch = master branch'
                 sh ''' npm install -g uglify-js npm install clean-css-cli -g '''
@@ -30,8 +30,7 @@ pipeline{
         stage (' PR CSS Stylecheck ') {
             when {
                 branch 'PR-*'  
-                }
-
+            }
             steps {
             sh '''
             echo "PULL REQUEST, Applying Stylelint"
