@@ -10,9 +10,9 @@ pipeline{
         
         stage('minify, archive website & save artifact'){
             tools {nodejs "NodeJS14"}
-            //when{
-            //    branch 'master'
-            //}
+            when{
+                branch 'master'
+            
             steps {
                 echo 'run this stage - ony if the branch = master branch'
                 sh ''' npm install -g uglify-js npm install clean-css-cli -g '''
@@ -28,9 +28,9 @@ pipeline{
                    }
         }
         stage (' PR CSS Stylecheck ') {
-        //when {
-        //        branch 'PR-*'  
-        //    }
+            when {
+                branch 'PR-*'  
+                }
 
             steps {
             sh '''
