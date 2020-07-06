@@ -27,21 +27,27 @@ pipeline{
                 archiveArtifacts artifacts: 'www.tar.gz', followSymlinks: false
                    }
         }
-        stage (' PR CSS Stylecheck ') {
-            when {
-                branch 'PR-*'  
+        stage (' PR CSS Sonarqube check ') {
+            
+        when {
+               branch 'PR-*'  
             }
+        environment {
+        scannerHome = tool 'SonarQubeScanner'
+          }   
+    
             steps {
-            sh '''
-            echo "PULL REQUEST, Applying Stylelint"
-            npm install stylelint --save-dev
-            npm install stylelint-config-standard --save-dev
-            echo '{
-  "extends": "stylelint-config-standard"
-}' > .styleintrc.json
-            npx stylelint --config .styleintrc.json "**/*.css" -o report-stylelint.txt || true
-               '''
-            archiveArtifacts artifacts: 'report-stylelint.txt', followSymlinks: false
+            
+            withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner\
+              -Dsonar.projectKey=mdt \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=http://10.0.0.6:9000 \
+              -Dsonar.login=701a97c279ae8c2ec7389e0751ed69a21a1ef5fd"
+                 }
+        timeout(time: 1, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+                    }
             }
 
         }
