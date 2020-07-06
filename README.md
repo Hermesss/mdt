@@ -7,7 +7,7 @@
 <br/>
 <a href="https://www.behance.net/gallery/23484793/Material-Design-One-Page-Template">View More Screens</a>
 <h3>Platforms used</h3>
-HTML, CSS, JSб TYPO
+HTML, CSS, JS
 
 <h3>Resources</h3>
 <ul>
