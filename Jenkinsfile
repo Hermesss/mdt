@@ -1,24 +1,18 @@
 pipeline{
-    agent{
-        label "linux"
-    }
+    
+    agent{label "linux"}
     stages{
-        stage('minify'){
-            agent any
+        stage('checkout'){
+            steps{
+                git 'https://github.com/Hermesss/mdt.git'
+            }
+        }
+        
+        stage('minify, archive website & save artifact'){
             tools {nodejs "NodeJS14"}
-<<<<<<< HEAD
             when{
                 branch 'master'
-            }
-            steps {
-                echo 'run this stage - ony if the branch = master branch'
-                sh ''' npm install
-                       cd $env.WORKSAPCE/www/js/
-                       uglifyjs --compress -- init.js materialize.js modernizr.js  --output out.min.js '''
-=======
-            //when{
-            //    branch 'master'
-            //}
+               }
             steps {
                 echo 'run this stage - ony if the branch = master branch'
                 sh ''' npm install -g uglify-js npm install clean-css-cli -g '''
@@ -33,31 +27,30 @@ pipeline{
                 archiveArtifacts artifacts: 'www.tar.gz', followSymlinks: false
                    }
         }
-        stage (' PR CSS Stylecheck ') {
-        //when {
-        //        branch 'PR-*'  
-        //    }
->>>>>>> parent of 1af9b9e... added When condition
-
-                 
-                }
-
-            }
-        stage("Slylelint"){
-            agent any
-            steps{
-                echo "====++++executing Slylelint++++===="
-            }
+        stage (' PR CSS Sonarqube check ') {
             
+        when {
+               branch 'PR-*'  
             }
-        stage('Archive'){
-            agent any
-            when{
-                branch 'master'
-            }
+        environment {
+        scannerHome = tool 'SonarQubeScanner'
+          }   
+    
             steps {
-                echo 'ARCHIVE run this stage - ony if the branch = master branch'
-                }
+            
+            withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner\
+              -Dsonar.projectKey=mdt \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=http://10.0.0.6:9000 \
+              -Dsonar.login=701a97c279ae8c2ec7389e0751ed69a21a1ef5fd"
+                 }
+        timeout(time: 1, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+                    }
             }
+
         }
+        
     }
+}
