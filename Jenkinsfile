@@ -5,12 +5,19 @@ pipeline{
     stages{
         stage('minify'){
             agent any
+            tools {nodejs "NodeJS14"}
             when{
                 branch 'master'
             }
             steps {
                 echo 'run this stage - ony if the branch = master branch'
+                sh ''' npm install
+                       cd $env.WORKSAPCE/www/js/
+                       uglifyjs --compress -- init.js materialize.js modernizr.js  --output out.min.js '''
+
+                 
                 }
+
             }
         stage("Slylelint"){
             agent any
