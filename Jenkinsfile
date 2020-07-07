@@ -54,7 +54,6 @@ pipeline{
             steps{
                 archiveArtifacts artifacts: 'www.tar.gz', followSymlinks: false
             }
-            post{
                 
         stage("Archive"){
             steps{
@@ -66,4 +65,3 @@ pipeline{
         }
     }
     }
-}
