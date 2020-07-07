@@ -9,9 +9,9 @@ pipeline{
         }
         stage (' Test ') {
             
-        /*when {
+        {
                branch 'PR-*'  
-            } */
+            } 
         environment {
         scannerHome = tool 'SonarQubeScanner'
           }   
