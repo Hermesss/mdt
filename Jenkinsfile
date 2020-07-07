@@ -9,7 +9,7 @@ pipeline{
         }
         stage (' Test ') {
             
-        {
+        when{
                branch 'PR-*'  
             } 
         environment {
