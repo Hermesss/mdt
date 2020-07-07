@@ -46,3 +46,5 @@ Temporary Items
 #TF 
 .terraform
 *.tfvars
+*.tfstate.*
+*.tfstate

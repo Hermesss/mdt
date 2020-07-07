@@ -14,6 +14,7 @@ resource "azurerm_network_interface" "main" {
 
   ip_configuration {
     name                          = "testconfiguration1"
+    subnet_id                     = "/subscriptions/2a533c5f-5b68-463f-b191-1b569c362c19/resourceGroups/Jenkins/providers/Microsoft.Network/virtualNetworks/Jenkins-vnet/subnets/default"
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -47,6 +48,7 @@ resource "azurerm_virtual_machine" "main" {
     computer_name  = "hostname"
     admin_username = "testadmin"
     admin_password = "Password1234!"
+    custom_data    = file("integrationtest.sh")
   }
   os_profile_linux_config {
     disable_password_authentication = false
@@ -54,4 +56,8 @@ resource "azurerm_virtual_machine" "main" {
   tags = {
     environment = "staging"
   }
+}
+output "ip" {
+  //description = "private ip addresses of the vm nic"
+  value       = azurerm_network_interface.main.*.private_ip_address
 }
