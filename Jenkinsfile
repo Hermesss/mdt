@@ -55,7 +55,7 @@ pipeline{
                 archiveArtifacts artifacts: 'www.tar.gz', followSymlinks: false
             }
         }   
-        stage("Archive"){
+        stage("Integration"){
             steps{
                 build 'Integration'
             }       
