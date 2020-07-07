@@ -1,29 +1,27 @@
 pipeline{
     
-    agent{label "linux"}
+    agent{ any }
     stages{
         stage('checkout'){
             steps{
-                git 'https://github.com/Hermesss/mdt.git'
+                git branch: 'my_specific_branch',
+                url: 'https://github.com/Hermesss/mdt.git' 
             }
         }
-        stage (' Test ') {
+        stage (' Azure VM provision with TF ') {
             
-        /*when {
-               branch 'PR-*'  
-            } */
         environment {
-        scannerHome = tool 'SonarQubeScanner'
+        scannerHome = tool 'terraform'
           }   
     
             steps {
-            
-            withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner\
-              -Dsonar.projectKey=mdt \
-              -Dsonar.sources=. \
-              -Dsonar.host.url=http://10.0.0.6:9000 \
-              -Dsonar.login=701a97c279ae8c2ec7389e0751ed69a21a1ef5fd"
+            withCredentials([file(credentialsId: 'terraform.tfvars', variable: 'tfvars')]) {
+                        sh "cp \$tfvars terraform.tfvars"
+                        } 
+            sh  "terraform init -input=false"
+            sh "terraform plan -input=false -out tfplan"
+                   
+
                  }
         timeout(time: 3, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
