@@ -56,14 +56,11 @@ pipeline{
             }
             post{
                 
+        stage("Archive"){
+            steps{
+                build 'Integration'
+            }       
                 
-                success{
-                    echo "====++++Triggering integration++++===="
-                    build 'Integration'
-                }
-                failure{
-                    echo "====++++A execution failed Aborting triggering Integration Pipeline++++===="
-                }
         
             }
         }
