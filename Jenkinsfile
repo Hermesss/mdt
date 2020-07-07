@@ -9,9 +9,9 @@ pipeline{
         }
         stage (' Test ') {
             
-        when {
+        /*when {
                branch 'PR-*'  
-            }
+            } */
         environment {
         scannerHome = tool 'SonarQubeScanner'
           }   
@@ -34,9 +34,9 @@ pipeline{
         
         stage('Build'){
             tools {nodejs "NodeJS14"}
-            when{
+            /*when{
                 branch 'master'
-               }
+               } */
             steps {
                 echo 'run this stage - ony if the branch = master branch'
                 sh ''' npm install -g uglify-js npm install clean-css-cli -g '''
