@@ -19,10 +19,13 @@ pipeline{
             withCredentials([file(credentialsId: 'terraform.tfvars', variable: 'tfvars')]) {
                         sh "cp \$tfvars terraform.tfvars"
                         } 
-            sh  "terraform init"
+            sh "terraform init"
             sh "terraform plan -input=false"
             sh "terraform apply -auto-approve"
                    
 
                  }
             }
+
+        }
+}
